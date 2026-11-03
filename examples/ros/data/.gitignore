@@ -1,0 +1,4 @@
+# The generated bag lands here; regenerate it with make_bag.py rather than
+# committing several hundred megabytes of depth images.
+*
+!.gitignore

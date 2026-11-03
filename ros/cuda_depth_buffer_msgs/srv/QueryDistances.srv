@@ -1,0 +1,25 @@
+# Signed distance, gradient and closest point of a batch of query points.
+#
+# Points and every returned vector are xyz interleaved and expressed in the
+# reference frame the node's poses are in, the same convention as the C++ and
+# Python interfaces. Flat float32 rather than geometry_msgs/Point[] because a
+# planner asks about thousands of points at a time and builds them as an array
+# anyway.
+
+float32[] points          # 3 * N, xyz interleaved
+bool conservative true    # also run the occlusion pass and fill its channel
+float32 truncation_radius 0.0   # <= 0 uses the node's configured default
+---
+bool success
+string message            # why not, when success is false
+
+# All six are 0 length when success is false. A distance saturated at the
+# truncation radius has no closest point, and its point and gradient are NaN.
+float32[] optimistic_distance    # N
+float32[] optimistic_gradient    # 3 * N
+float32[] optimistic_closest     # 3 * N
+
+# NaN throughout when conservative was false, so the layout never changes.
+float32[] conservative_distance  # N
+float32[] conservative_gradient  # 3 * N
+float32[] conservative_closest   # 3 * N

@@ -1,0 +1,6 @@
+# Revisions that only moved text around. Ignore them when reading blame:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+# GitHub and GitLab pick this file up on their own.
+
+# format the tree
+e6bb3d82fbca96b1fcb78d5a710c1d6acce06dca

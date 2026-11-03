@@ -1,0 +1,36 @@
+name: Deploy project page
+
+# The project page lives in the private repository ethz-mrl/mapless-esdf-website.
+# This workflow publishes it at https://ethz-mrl.github.io/mapless-esdf, an
+# address that belongs to the public repository, so the page files never enter
+# this repository's history. Run it from the Actions tab after changing the page.
+# It reads the website repository through a read-only deploy key whose private
+# half is stored as the secret WEBSITE_DEPLOY_KEY.
+on: workflow_dispatch
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.repository == 'ethz-mrl/mapless-esdf'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ethz-mrl/mapless-esdf-website
+          ssh-key: ${{ secrets.WEBSITE_DEPLOY_KEY }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+title: cuda-depth-buffer
+message: >-
+  If you use this software, please cite the paper given under
+  preferred-citation.
+type: software
+authors:
+  - given-names: Leonard
+    family-names: Freissmuth
+    email: leonard.freissmuth@mrl.ethz.ch
+    affiliation: ETH Zurich
+repository-code: 'https://github.com/ethz-mrl/mapless-esdf'
+url: 'https://ethz-mrl.github.io/mapless-esdf'
+abstract: >-
+  Euclidean signed distance queries evaluated directly on a circular buffer of
+  posed depth images on the GPU, without constructing a map. Queries support an
+  optimistic distance, which treats unobserved space as free, and a signed
+  conservative distance, which treats it as occupied and includes the boundary
+  of unknown space.
+keywords:
+  - esdf
+  - cuda
+  - robotics
+  - collision avoidance
+  - micro aerial vehicle
+license: BSD-3-Clause
+version: 0.1.0
+preferred-citation:
+  type: article
+  title: Low-Latency Mapless ESDF Queries for MAV Reactive Collision Avoidance
+  authors:
+    - given-names: Leonard
+      family-names: Freissmuth
+    - given-names: Cedric
+      family-names: Le Gentil
+    - given-names: Helen
+      family-names: Oleynikova
+    - given-names: Stefan
+      family-names: Leutenegger
+  journal: arXiv preprint arXiv:2610.13158
+  year: 2026
+  url: 'https://arxiv.org/abs/2610.13158'

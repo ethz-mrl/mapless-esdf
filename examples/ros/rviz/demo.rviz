@@ -1,0 +1,145 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /ESDF slice1
+      Splitter Ratio: 0.5
+    Tree Height: 620
+  - Class: rviz_common/Views
+    Name: Views
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Cell Size: 1
+      Plane Cell Count: 30
+      Color: 120; 120; 120
+      Alpha: 0.25
+      Line Style:
+        Line Width: 0.03
+        Value: Lines
+      Plane: XY
+      Reference Frame: <Fixed Frame>
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+    - Class: rviz_default_plugins/MarkerArray
+      Name: Scene (ground truth)
+      Enabled: true
+      Namespaces:
+        {}
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /scene/markers
+    - Class: rviz_default_plugins/PointCloud2
+      Name: ESDF slice
+      Enabled: true
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /cuda_depth_buffer/esdf_slice
+      Style: Boxes
+      Size (m): 0.16
+      Alpha: 1
+      Decay Time: 0
+      Position Transformer: XYZ
+      Color Transformer: RGB8
+      Channel Name: intensity
+      Use rainbow: false
+      Invert Rainbow: false
+      Min Color: 30; 60; 200
+      Max Color: 210; 40; 40
+      Autocompute Intensity Bounds: false
+      Min Intensity: -3
+      Max Intensity: 3
+      Selectable: false
+      Queue Size: 5
+    - Class: rviz_default_plugins/Image
+      Name: Depth image
+      Enabled: true
+      Max Value: 10
+      Min Value: 0.3
+      Normalize Range: false
+      Median window: 5
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /camera/depth/image_rect_raw
+      Transport Hint: raw
+      Value: true
+    - Class: rviz_default_plugins/Pose
+      Name: Camera pose
+      Enabled: true
+      Shape: Axes
+      Axes Length: 0.6
+      Axes Radius: 0.06
+      Alpha: 1
+      Head Length: 0.2
+      Head Radius: 0.1
+      Shaft Length: 0.6
+      Shaft Radius: 0.04
+      Color: 255; 25; 0
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Best Effort
+        Value: /odometry/pose
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: false
+      Frame Timeout: 15
+      Marker Scale: 1
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Update Interval: 0
+      Frames:
+        All Enabled: true
+      Tree:
+        {}
+  Enabled: true
+  Global Options:
+    Background Color: 20; 20; 24
+    Fixed Frame: odom
+    Frame Rate: 30
+  Tools:
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+      Line color: 128; 128; 0
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Name: Current View
+      Distance: 26
+      Focal Point:
+        X: 0
+        Y: 0
+        Z: 0
+      Pitch: 0.85
+      Yaw: 0.9
+      Near Clip Distance: 0.01
+      Target Frame: <Fixed Frame>
+      Value: Orbit (rviz)
+    Saved: ~
+Window Geometry:
+  Displays:
+    collapsed: false
+  Depth image:
+    collapsed: false
+  Height: 900
+  Width: 1600
+  QMainWindow State: ""
