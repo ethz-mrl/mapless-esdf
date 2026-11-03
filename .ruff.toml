@@ -1,0 +1,15 @@
+# The Python here is bindings glue, tests and examples, not a library of its own.
+line-length = 90
+target-version = "py38"
+
+[lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4"]
+ignore = [
+  "E501",   # the line length above is a guide, not a gate
+  "B008",   # argparse and numpy idioms trip this
+]
+
+[lint.per-file-ignores]
+"examples/**" = ["T201"]     # examples print, that is the point
+"*.ipynb" = ["E702"]         # `fig, ax = plt.subplots(); ax.imshow(...)` reads
+                             # fine in a plotting cell

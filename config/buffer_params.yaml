@@ -1,0 +1,18 @@
+# Configuration shared by the C++ examples, the Python bindings and the ROS
+# node. See README.md for what each field means.
+
+num_frames: 10                  # posed depth images kept in the ring buffer
+use_keyframing: false           # slot 0 holds the latest frame, the rest keyframes
+min_pool_size: 1                # min pooling kernel size in px, 1 disables it
+depth_scale_factor: 1.0         # e.g. 0.001 for millimeter input
+invalid_is_farplane: false      # invalid depth (NaN or <= 0) -> far plane
+robot_radius: 0.0               # cleared sphere around the robot center in m
+
+# Evaluated by CudaDepthBuffer::isKeyframe, never applied automatically.
+keyframe_dist_threshold: 0.5    # m
+keyframe_angle_threshold: 0.1   # rad
+keyframe_time_threshold: 1.0    # s
+
+# Obstacles are inflated by this many standard deviations of the frame's pose
+# uncertainty. Frames without a covariance contribute no margin; 0 disables it.
+pose_covariance_confidence: 4.0

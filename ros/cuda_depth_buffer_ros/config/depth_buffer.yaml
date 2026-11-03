@@ -1,0 +1,60 @@
+# Every knob the node has. Nothing here needs a rebuild to change.
+/**:
+  ros__parameters:
+    # --- the ring buffer -----------------------------------------------------
+    num_frames: 20              # fixed for the life of the node
+    use_keyframing: false       # reserve slot 0 for the latest frame
+    min_pool_size: 1            # min pooling on insert, 1 disables it
+    depth_scale_factor: 1.0     # 0.001 for a 16UC1 stream in millimetres
+    invalid_is_farplane: false  # invalid depth reads as z_near, not z_far
+
+    # A sphere of this radius around the camera of every frame is free, on the
+    # grounds that the robot was there when the image was taken. 0 disables it.
+    robot_radius: 0.0
+    robot_center_in_camera: [0.0, 0.0, 0.0]
+
+    # Evaluated by is_keyframe, applied only when use_keyframing is true.
+    keyframe_dist_threshold: 0.5    # metres
+    keyframe_angle_threshold: 0.1   # radians
+    keyframe_time_threshold: 1.0    # seconds
+
+    # Obstacles seen by a frame are inflated by this many standard deviations
+    # of that frame's pose uncertainty, which limits how far a frame with an
+    # uncertain pose can erode them. A frame without a covariance contributes no
+    # margin.
+    pose_covariance_confidence: 4.0
+
+    # --- frames and poses ----------------------------------------------------
+    reference_frame: odom       # queries and results are in this frame
+    pose_source: topic          # "topic" (~/pose) or "tf"
+    tf_timeout: 0.05            # seconds to wait for a transform
+
+    # --- image geometry ------------------------------------------------------
+    # Taken from ~/camera_info when use_camera_info is true. Set fx, fy, cx, cy,
+    # width and height instead for a sensor that publishes none.
+    use_camera_info: true
+    fx: 0.0
+    fy: 0.0
+    cx: 0.0
+    cy: 0.0
+    width: 0
+    height: 0
+    z_near: 0.2                 # every stored depth is clipped into
+    z_far: 20.0                 # this range
+
+    # --- queries -------------------------------------------------------------
+    truncation_radius: 3.0      # default when a request asks for none
+
+    # --- the published slice -------------------------------------------------
+    # Only computed while something is subscribed to ~/esdf_slice.
+    slice:
+      rate: 2.0                 # Hz, 0 disables it
+      height: 1.0               # metres in the reference frame
+      extent: 10.0              # half width of the square, metres
+      resolution: 128           # points per side
+      conservative: true
+      # Also ship an rgb field: blue for unknown, white for its boundary, red
+      # for free, scaled to the truncation radius. RViz interpolates between
+      # two colours and so cannot put white in the middle, where the sign
+      # changes. The raw distance is in `intensity` either way.
+      colorize: true

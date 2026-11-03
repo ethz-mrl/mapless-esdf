@@ -1,0 +1,50 @@
+[build-system]
+requires = ["scikit-build-core>=0.10", "pybind11>=2.10"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "cuda-depth-buffer"
+version = "0.1.0"
+description = "Mapless sensor-space ESDF queries over a buffer of posed depth images"
+requires-python = ">=3.8"
+readme = "README.md"
+authors = [{name = "Leonard Freissmuth", email = "leonard.freissmuth@mrl.ethz.ch"}]
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+keywords = ["esdf", "cuda", "robotics", "depth", "collision-avoidance"]
+classifiers = [
+  "Programming Language :: C++",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering",
+]
+dependencies = ["numpy>=1.20"]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+notebook = ["ipywidgets>=8", "jupyterlab>=4", "matplotlib>=3.6"]
+
+[project.urls]
+Homepage = "https://github.com/ethz-mrl/mapless-esdf"
+
+# There are no wheels: the extension is compiled against the CUDA toolkit and
+# the driver of the machine it will run on, so this is a source install.
+[tool.scikit-build]
+minimum-version = "0.10"
+cmake.version = ">=3.20"
+build-dir = "build/{wheel_tag}"
+# The package is laid out by CMake's install(), including __init__.py, so there
+# is nothing for the backend to copy on its own.
+wheel.packages = []
+install.components = ["python"]
+
+[tool.scikit-build.cmake.define]
+CUDA_DEPTH_BUFFER_BUILD_PYTHON = "ON"
+CUDA_DEPTH_BUFFER_BUILD_TESTS = "OFF"
+CUDA_DEPTH_BUFFER_BUILD_EXAMPLES = "OFF"
+CUDA_DEPTH_BUFFER_BUILD_BENCHMARK = "OFF"
+
+[tool.pytest.ini_options]
+testpaths = ["python/tests"]
+
+[tool.ruff]
+line-length = 90

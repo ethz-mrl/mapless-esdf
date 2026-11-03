@@ -1,0 +1,71 @@
+name: Deploy project page
+
+# The project page lives in the private repository ethz-mrl/mapless-esdf-website.
+# This workflow publishes it at https://ethz-mrl.github.io/mapless-esdf, an
+# address that belongs to the public repository, so the page files never enter
+# this repository's history. Run it from the Actions tab after changing the page.
+# It reads the website repository through a read-only deploy key whose private
+# half is stored as the secret WEBSITE_DEPLOY_KEY.
+on: workflow_dispatch
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.repository == 'ethz-mrl/mapless-esdf'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: site
+        uses: actions/checkout@v4
+        with:
+          repository: ethz-mrl/mapless-esdf-website
+          ssh-key: ${{ secrets.WEBSITE_DEPLOY_KEY }}
+      - id: upload
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      # This step does what actions/deploy-pages does, but with a build version
+      # that is unique to each run. deploy-pages uses this repository's commit as
+      # the version. Pages does not publish a deployment whose version it has seen
+      # before, and changing the page adds no commit here.
+      - id: deployment
+        uses: actions/github-script@v7
+        env:
+          ARTIFACT_ID: ${{ steps.upload.outputs.artifact_id }}
+          BUILD_VERSION: ${{ steps.site.outputs.commit }}-${{ github.run_id }}-${{ github.run_attempt }}
+        with:
+          script: |
+            const { data: created } = await github.request('POST /repos/{owner}/{repo}/pages/deployments', {
+              ...context.repo,
+              artifact_id: Number(process.env.ARTIFACT_ID),
+              pages_build_version: process.env.BUILD_VERSION,
+              oidc_token: await core.getIDToken(),
+            });
+            core.setOutput('page_url', created.page_url);
+            const id = created.id || created.status_url.split('/').pop();
+            core.info(`Created deployment ${id} for build version ${process.env.BUILD_VERSION}`);
+
+            const failed = ['deployment_failed', 'deployment_perms_error', 'deployment_content_failed',
+                            'deployment_cancelled', 'deployment_lost'];
+            const deadline = Date.now() + 10 * 60 * 1000;
+            while (Date.now() < deadline) {
+              await new Promise(resolve => setTimeout(resolve, 5000));
+              const { data: { status } } = await github.request('GET /repos/{owner}/{repo}/pages/deployments/{id}', {
+                ...context.repo,
+                id,
+              });
+              core.info(`Status: ${status}`);
+              if (status === 'succeed') return;
+              if (failed.includes(status)) return core.setFailed(`Deployment ended with status ${status}`);
+            }
+            core.setFailed('Deployment did not finish within 10 minutes');
